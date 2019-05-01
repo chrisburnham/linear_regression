@@ -20,6 +20,13 @@ def get_cols_from_headers(row):
 	return cols
 
 
+# Takes in a list of data and normalize it
+def normalize_list(input):
+	output = list()
+
+	return output
+
+
 def read_csv(filename):
 	with open(filename, 'rb') as csvfile:
 		csv_reader = csv.reader(csvfile)
@@ -27,6 +34,7 @@ def read_csv(filename):
 		first = True
 
 		cols = list()
+		data = list()
 		for row in csv_reader:
 			if(first):
 				if(args.get("print_headers")):
@@ -34,15 +42,21 @@ def read_csv(filename):
 					return
 
 				cols = get_cols_from_headers(row)
-				first = False
+
+			data_row = list()
+			for i in range(len(row)):
+				if(cols.count(i) != 0):
+					data_row.append(row[i])
 
 			if(args.get("print_data")):
-				print_row = list()
-				for i in range(len(row)):
-					if(cols.count(i) != 0):
-						print_row.append(row[i])
+				print data_row
 
-				print print_row
+			if(not first):
+				data.append(data_row)
+
+			first = False
+
+		print data
 
 
 if __name__ == "__main__":
