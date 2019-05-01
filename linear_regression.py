@@ -37,12 +37,13 @@ def read_csv(filename):
 				cols = get_cols_from_headers(row)
 				first = False
 
-			print_row = list()
-			for i in range(len(row)):
-				if(cols.count(i) != 0):
-					print_row.append(row[i])
+			if(args.get("print_data")):
+				print_row = list()
+				for i in range(len(row)):
+					if(cols.count(i) != 0):
+						print_row.append(row[i])
 
-			print print_row
+				print print_row
 
 
 if __name__ == "__main__":
@@ -60,6 +61,10 @@ if __name__ == "__main__":
 	parser.add_argument("--print_headers",
 											action="store_true",
 											help="Print headers and quit")
+
+	parser.add_argument("--print_data",
+											action="store_true",
+											help="Print data specified")
 
 	args = vars(parser.parse_args())
 
