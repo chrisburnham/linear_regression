@@ -21,19 +21,41 @@ def get_cols_from_headers(row):
 
 ###########################################################
 
-# Takes in a list of rows (lists) and normilizes it
-# by columns (same index in each list)
-def normalize_data(input):
-	output = list()
+# TODO: It might save some hardship and be faster to use numpy 
+# to get matrix functions
 
-	return output
+# Takes in a matrix as a list of lists and returns its transpose
+def transpose(matrix):
+	num_cols = len(matrix[0])
+	cols = list()
+	for i in range(num_cols):
+		cols.append(list())
+
+	for row in matrix:
+		if(len(row) != num_cols):
+			print "All rows must be the same size!!"
+			return
+
+		for i in range(len(row)):
+			cols[i].append(row[i])
+
+	return cols
 
 ###########################################################
 
 # Takes in a list of data and normalize it
-def normalize_list(input):
-	output = list()
+def normalize_list(input_list):
+	output_list = list()
 
+	return output_list
+
+###########################################################
+
+# Takes in a list of rows (lists) and normilizes it
+# by columns (same index in each list). We require that
+# the input be a matrix, ie every row has the same length
+def normalize_data(matrix):
+	output = transpose(matrix)
 	return output
 
 ###########################################################
