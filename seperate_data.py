@@ -2,7 +2,7 @@ import csv
 import argparse
 import random
 
-# Write a list of rows
+# Write a list of rows to a CSV
 def write_csv(filename, list):
 	with open(filename, 'wb') as csvfile:
 		csv_writer = csv.writer(csvfile)
@@ -10,6 +10,11 @@ def write_csv(filename, list):
 			csv_writer.writerow(row)
 
 
+# Recursive function to sperate out the source data
+# into training, tuning, and validation CSV files.
+# If random break down does not meet the tolerance 
+# we try again unless we have taken more than
+# max_attempts attempts at it already
 def seperate_csv(filename, attempts):
 	attempts += 1
 	if(attempts > args.get("max_attempts")):
