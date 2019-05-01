@@ -1,31 +1,31 @@
 import csv
 import argparse
+import random
 
 # https://docs.python.org/2/library/csv.html
 # using examples for csv to open file
-def read_csv(filename):
+def seperate_csv(filename):
+	train_percent = args.get("training_percent")
+	tune_percent = args.get("tuning_percent")
+	validate_percent = args.get("validation_percent")
+
+	if((train_percent < 0) or (tune_percent < 0) or (validate_percent < 0)):
+		print "Percents must be positive"
+		return
+
+	if((train_percent + tune_percent + validate_percent) > 100):
+		print "Total percent cannot exceed 100"
+		return
+
 	with open(filename, 'rb') as csvfile:
 		spamreader = csv.reader(csvfile)
 
 		first = True
 
 		cols = list()
-		for row in spamreader:
-			if(first):
-				if(args.get("print_headers")):
-					print row
-					return
+		#for row in spamreader:
 
-				cols = get_cols_from_headers(row)
-				first = False
 
-			if(args.get("print_data")):
-				print_row = list()
-				for i in range(len(row)):
-					if(cols.count(i) != 0):
-						print_row.append(row[i])
-
-				print print_row
 
 
 if __name__ == "__main__":
@@ -38,17 +38,17 @@ if __name__ == "__main__":
 	parser.add_argument("--training_data_file",
 											metavar="training_data.csv",
 											help="Path used to write out training data",
-											required=True)
+											default="training_data.csv")
 
 	parser.add_argument("--tuning_data_file",
 											metavar="tuning_data.csv",
 											help="Path used to write out tuning data",
-											required=True)
+											default="tuning_data.csv")
 
 	parser.add_argument("--validation_data_file",
 											metavar="validation_data.csv",
 											help="Path used to write out validation data",
-											required=True)
+											default="validation_data.csv")
 
 	parser.add_argument("--training_percent",
 											metavar="70",
@@ -71,4 +71,4 @@ if __name__ == "__main__":
 	args = vars(parser.parse_args())
 
 
-	read_csv(args.get("data_file"))
+	seperate_csv(args.get("data_file"))
