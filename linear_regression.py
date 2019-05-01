@@ -53,7 +53,8 @@ if __name__ == "__main__":
 											help="Path to data file to read",
 											required=True)
 	
-	parser.add_argument("--cols",
+	parser.add_argument("-c",
+											"--cols",
 											action="append",
 											metavar="Column_name",
 											help="Columns to look at. Specify multiple times")
