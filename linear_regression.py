@@ -19,6 +19,16 @@ def get_cols_from_headers(row):
 
 	return cols
 
+###########################################################
+
+# Takes in a list of rows (lists) and normilizes it
+# by columns (same index in each list)
+def normalize_data(input):
+	output = list()
+
+	return output
+
+###########################################################
 
 # Takes in a list of data and normalize it
 def normalize_list(input):
@@ -26,6 +36,7 @@ def normalize_list(input):
 
 	return output
 
+###########################################################
 
 def read_csv(filename):
 	with open(filename, 'rb') as csvfile:
@@ -57,7 +68,10 @@ def read_csv(filename):
 			first = False
 
 		print data
+		data = normalize_data(data)
+		print data
 
+###########################################################
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Run Linear Regression")

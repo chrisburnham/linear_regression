@@ -9,6 +9,7 @@ def write_csv(filename, list):
 		for row in list:
 			csv_writer.writerow(row)
 
+###########################################################
 
 # Recursive function to sperate out the source data
 # into training, tuning, and validation CSV files.
@@ -90,6 +91,7 @@ def seperate_csv(filename, attempts):
 	write_csv(args.get("validation_data_file"), validate_list)
 	print "CSV's written!"
 
+###########################################################
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Seperate data")
