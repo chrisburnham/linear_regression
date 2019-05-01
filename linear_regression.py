@@ -19,16 +19,15 @@ def get_cols_from_headers(row):
 
 	return cols
 
-# https://docs.python.org/2/library/csv.html
-# using examples for csv to open file
+
 def read_csv(filename):
 	with open(filename, 'rb') as csvfile:
-		spamreader = csv.reader(csvfile)
+		csv_reader = csv.reader(csvfile)
 
 		first = True
 
 		cols = list()
-		for row in spamreader:
+		for row in csv_reader:
 			if(first):
 				if(args.get("print_headers")):
 					print row

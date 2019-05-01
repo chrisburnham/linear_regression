@@ -2,9 +2,20 @@ import csv
 import argparse
 import random
 
-# https://docs.python.org/2/library/csv.html
-# using examples for csv to open file
-def seperate_csv(filename):
+def write_csv(filename, list):
+	with open(filename, 'wb') as csvfile:
+		csv_writer = csv.writer(csvfile)
+		for row in list:
+			csv_writer.writerow(row)
+
+
+def seperate_csv(filename, attempts):
+	attempts += 1
+	if(attempts > args.get("max_attempts")):
+		print "Too many attempts. Giving up"
+		return
+
+
 	train_percent = args.get("training_percent")
 	tune_percent = args.get("tuning_percent")
 	validate_percent = args.get("validation_percent")
@@ -17,15 +28,53 @@ def seperate_csv(filename):
 		print "Total percent cannot exceed 100"
 		return
 
+	rand = random.Random()
+	rand.seed()
+
+	train_list = list()
+	tune_list = list()
+	validate_list = list()
+	num_skipped = 0.0
+	total_rows = 0.0
+
 	with open(filename, 'rb') as csvfile:
-		spamreader = csv.reader(csvfile)
+		csv_reader = csv.reader(csvfile)
 
-		first = True
+		for row in csv_reader:
+			total_rows += 1.0
+			rand_num = rand.uniform(0, 100)
+			if(rand_num < train_percent):
+				train_list.append(row)
+			elif(rand_num < (train_percent + tune_percent)):
+				tune_list.append(row)
+			elif(rand_num < (train_percent + tune_percent + validate_percent)):
+				validate_list.append(row)
+			else:
+				num_skipped += 1.0
 
-		cols = list()
-		#for row in spamreader:
+	train_actual = 100 * (len(train_list) / total_rows)
+	tune_actual = 100 * (len(tune_list) / total_rows)
+	validate_actual = 100 * (len(validate_list) / total_rows)
+	skip_actual = 100 * (num_skipped / total_rows)
 
+	print "Acutual Percents:"
+	print "Training: ", train_actual, "%"
+	print "Tuning:   ", tune_actual, "%"
+	print "Validate: ", validate_actual, "%"
+	print "Skipped:  ", skip_actual, "%"
 
+	tolerance = args.get("percent_tolerance")
+	if((abs(train_percent - train_actual) > tolerance) or
+		 (abs(tune_percent - tune_actual) > tolerance) or
+		 (abs(validate_percent - validate_actual) > tolerance)):
+		print "Percents outside of tolerance. Trying again"
+		seperate_csv(filename, attempts)
+		return
+
+	write_csv(args.get("training_data_file"), train_list)
+	write_csv(args.get("tuning_data_file"), tune_list)
+	write_csv(args.get("validation_data_file"), validate_list)
+	print "CSV's written!"
 
 
 if __name__ == "__main__":
@@ -68,7 +117,18 @@ if __name__ == "__main__":
 											type=float,
 											default=20)
 
+	parser.add_argument("--percent_tolerance",
+											metavar="1",
+											help="How close to the specified percents do we need to be",
+											type=float,
+											default=1)
+
+	parser.add_argument("--max_attempts",
+											metavar="10",
+											help="How times do we try to fulfil our tolerance before we give up",
+											type=int,
+											default=10)
+
 	args = vars(parser.parse_args())
 
-
-	seperate_csv(args.get("data_file"))
+	seperate_csv(args.get("data_file"), 0)
