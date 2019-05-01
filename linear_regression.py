@@ -30,12 +30,19 @@ def read_csv(filename):
 		cols = list()
 		for row in spamreader:
 			if(first):
+				if(args.get("print_headers")):
+					print row
+					return
+
 				cols = get_cols_from_headers(row)
 				first = False
 
+			print_row = list()
 			for i in range(len(row)):
 				if(cols.count(i) != 0):
-					print row[i]
+					print_row.append(row[i])
+
+			print print_row
 
 
 if __name__ == "__main__":
@@ -44,12 +51,15 @@ if __name__ == "__main__":
 											metavar="data_file.csv",
 											help="Path to data file to read",
 											required=True)
+	
 	parser.add_argument("--cols",
 											action="append",
 											metavar="Column_name",
 											help="Columns to look at. Specify multiple times")
 
-	# TODO: arg to print headers
+	parser.add_argument("--print_headers",
+											action="store_true",
+											help="Print headers and quit")
 
 	args = vars(parser.parse_args())
 
