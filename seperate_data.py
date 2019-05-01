@@ -2,6 +2,7 @@ import csv
 import argparse
 import random
 
+# Write a list of rows
 def write_csv(filename, list):
 	with open(filename, 'wb') as csvfile:
 		csv_writer = csv.writer(csvfile)
@@ -42,6 +43,14 @@ def seperate_csv(filename, attempts):
 
 		for row in csv_reader:
 			total_rows += 1.0
+
+			# Want headers in all our CSV's
+			if(total_rows == 1.0): # TODO: this should really be a fuzzy compare
+				train_list.append(row)
+				tune_list.append(row)
+				validate_list.append(row)
+				continue
+
 			rand_num = rand.uniform(0, 100)
 			if(rand_num < train_percent):
 				train_list.append(row)
