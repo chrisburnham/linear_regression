@@ -19,10 +19,22 @@ def get_cols_from_headers(row):
 
 	return cols
 
+
+# Calculating a regression
+# A = matrix of the values (with a leading column of 1's)
+# w = vector of the weights for the regression
+# y = matrix of the results (maybe a vector actually?)
+# using A' to mean A transpose
+# using A^-1 to mean A inverse
+# w = (A'A)^-1A'y
+# A transpose times A inverted. Times A transpose, with the inputs as its input
+
+
+
 ###########################################################
 
 # TODO: It might save some hardship and be faster to use numpy 
-# to get matrix functions
+# to get matrix functions (especially inverse which I'm going to need)
 
 # Takes in a matrix as a list of lists and returns its transpose
 def transpose(matrix):
