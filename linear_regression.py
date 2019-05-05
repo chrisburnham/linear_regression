@@ -1,5 +1,6 @@
 import csv
 import argparse
+import numpy
 
 # Pass in first row to return a list of the header
 # indexs that we care about. If cols is not set 
@@ -101,9 +102,31 @@ def read_csv(filename):
 
 			first = False
 
-		print data
-		data = normalize_data(data)
-		print data
+
+
+		# Numpy examples I'm going to need
+		nmatrix = numpy.matrix(data)
+
+		print nmatrix
+		trans = nmatrix.transpose()
+		print trans
+
+
+		print "\nInverse example"
+		nmatrix2 = numpy.matrix([[2, 0],[0,2],[1,1]])
+
+		try:
+			inverse = numpy.linalg.inv(nmatrix2)
+		except numpy.linalg.LinAlgError:
+			print "Not invertable"
+			pass
+		else:
+			print inverse
+
+
+		#print data
+		#data = normalize_data(data)
+		#print data
 
 ###########################################################
 
