@@ -123,6 +123,10 @@ def read_csv(filename):
 		else:
 			print inverse
 
+		narray = numpy.array([2,1,1,5])
+		print numpy.mean(narray)
+		print numpy.std(narray)
+
 
 		#print data
 		#data = normalize_data(data)
