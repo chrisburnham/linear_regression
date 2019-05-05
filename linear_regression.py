@@ -113,7 +113,7 @@ def read_csv(filename):
 
 
 		print "\nInverse example"
-		nmatrix2 = numpy.matrix([[2, 0],[0,2],[1,1]])
+		nmatrix2 = numpy.matrix([[2, 0],[0,2],[1,1]], dtype='f')
 
 		try:
 			inverse = numpy.linalg.inv(nmatrix2)
@@ -123,9 +123,17 @@ def read_csv(filename):
 		else:
 			print inverse
 
-		narray = numpy.array([2,1,1,5])
-		print numpy.mean(narray)
-		print numpy.std(narray)
+		print nmatrix2[:,0]
+		print nmatrix2[1,:]
+
+		print numpy.std(nmatrix2[:,0])
+		print numpy.mean(nmatrix2[1,:])
+
+		print "\nmanipulation"
+		print nmatrix2
+		nmatrix2[:,1] = nmatrix2[:,1] / 1.5
+		print nmatrix2
+
 
 
 		#print data
