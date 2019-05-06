@@ -31,6 +31,19 @@ def get_cols_from_headers(row):
 # A transpose times A inverted. Times A transpose, with the inputs as its input
 
 
+# Calculate error
+# Sum of the squares of the errors (probably just sum the elements individually)
+
+# Want to calc error for all possible varients of a given number of cols
+# and pick the smallest error. Then if doing a range of number of colums
+# we want to use a lambda to pick one (lowest cost). 
+# cost = error + lambda * num_cols
+# lambda and max cols (mabe min too) should be args
+
+# lambda decided based off of tuning
+
+# Want some sort of validation function. Probably calculate error on a function
+
 
 ###########################################################
 
