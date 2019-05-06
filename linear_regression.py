@@ -86,6 +86,39 @@ def normalize_data(matrix):
 
 ###########################################################
 
+def numpy_example():
+		# Numpy examples I'm going to need
+		nmatrix = numpy.matrix(data)
+
+		print nmatrix
+		trans = nmatrix.transpose()
+		print trans
+
+
+		print "\nInverse example"
+		nmatrix2 = numpy.matrix([[2, 0],[0,2],[1,1]], dtype='f')
+
+		try:
+			inverse = numpy.linalg.inv(nmatrix2)
+		except numpy.linalg.LinAlgError:
+			print "Not invertable"
+			pass
+		else:
+			print inverse
+
+		print nmatrix2[:,0]
+		print nmatrix2[1,:]
+
+		print numpy.std(nmatrix2[:,0])
+		print numpy.mean(nmatrix2[1,:])
+
+		print "\nmanipulation"
+		print nmatrix2
+		nmatrix2[:,1] = nmatrix2[:,1] / 1.5
+		print nmatrix2
+
+###########################################################
+
 def read_csv(filename):
 	with open(filename, 'rb') as csvfile:
 		csv_reader = csv.reader(csvfile)
@@ -117,35 +150,7 @@ def read_csv(filename):
 
 
 
-		# Numpy examples I'm going to need
-		nmatrix = numpy.matrix(data)
 
-		print nmatrix
-		trans = nmatrix.transpose()
-		print trans
-
-
-		print "\nInverse example"
-		nmatrix2 = numpy.matrix([[2, 0],[0,2],[1,1]], dtype='f')
-
-		try:
-			inverse = numpy.linalg.inv(nmatrix2)
-		except numpy.linalg.LinAlgError:
-			print "Not invertable"
-			pass
-		else:
-			print inverse
-
-		print nmatrix2[:,0]
-		print nmatrix2[1,:]
-
-		print numpy.std(nmatrix2[:,0])
-		print numpy.mean(nmatrix2[1,:])
-
-		print "\nmanipulation"
-		print nmatrix2
-		nmatrix2[:,1] = nmatrix2[:,1] / 1.5
-		print nmatrix2
 
 
 
