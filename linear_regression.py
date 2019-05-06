@@ -47,42 +47,21 @@ def get_cols_from_headers(row):
 
 ###########################################################
 
-# TODO: It might save some hardship and be faster to use numpy 
-# to get matrix functions (especially inverse which I'm going to need)
-
-# Takes in a matrix as a list of lists and returns its transpose
-def transpose(matrix):
-	num_cols = len(matrix[0])
-	cols = list()
-	for i in range(num_cols):
-		cols.append(list())
-
-	for row in matrix:
-		if(len(row) != num_cols):
-			print "All rows must be the same size!!"
-			return
-
-		for i in range(len(row)):
-			cols[i].append(row[i])
-
-	return cols
-
-###########################################################
-
 # Takes in a list of data and normalize it
 def normalize_list(input_list):
-	output_list = list()
-
-	return output_list
+	print input_list
+	mean = numpy.mean(input_list)
+	std_dev = numpy.std(input_list)
+	input_list = (input_list - mean) / std_dev
 
 ###########################################################
 
-# Takes in a list of rows (lists) and normilizes it
-# by columns (same index in each list). We require that
-# the input be a matrix, ie every row has the same length
+# Takes in a numpy matrix and normilizes it by column
 def normalize_data(matrix):
-	output = transpose(matrix)
-	return output
+	for i in range(matrix.shape[1]):
+		normalize_list(matrix[:,i])
+
+	#return output
 
 ###########################################################
 
@@ -148,11 +127,11 @@ def read_csv(filename):
 
 			first = False
 
+		data_matrix = numpy.matrix(data)
 
-
-		numpy_example(data)
-
-
+		print data_matrix
+		normalize_data(data_matrix)
+		print data_matrix
 
 		#print data
 		#data = normalize_data(data)
