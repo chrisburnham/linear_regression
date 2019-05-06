@@ -47,21 +47,15 @@ def get_cols_from_headers(row):
 
 ###########################################################
 
-# Takes in a list of data and normalize it
-def normalize_list(input_list):
-	print input_list
-	mean = numpy.mean(input_list)
-	std_dev = numpy.std(input_list)
-	input_list = (input_list - mean) / std_dev
-
-###########################################################
-
 # Takes in a numpy matrix and normilizes it by column
 def normalize_data(matrix):
 	for i in range(matrix.shape[1]):
-		normalize_list(matrix[:,i])
-
-	#return output
+		mean = numpy.mean(matrix[:,i])
+		std_dev = numpy.std(matrix[:,i])
+		if(std_dev == 0):
+			matrix[:,i] = 0
+		else:
+			matrix[:,i] = (matrix[:,i] - mean) / std_dev
 
 ###########################################################
 
