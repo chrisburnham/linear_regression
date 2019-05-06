@@ -127,7 +127,7 @@ def read_csv(filename):
 
 			first = False
 
-		data_matrix = numpy.matrix(data)
+		data_matrix = numpy.matrix(data, dtype='f')
 
 		print data_matrix
 		normalize_data(data_matrix)
