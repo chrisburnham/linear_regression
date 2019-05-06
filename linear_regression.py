@@ -46,6 +46,28 @@ def get_cols_from_headers(row):
 
 ###########################################################
 
+# Find the lowest cost regression for this data
+# Matrix is all the possible columns to use to do this regression
+# Results is a vector of the results we are attempting to predict
+# Max_cols is the most columns we will try to find our best regression
+# l is the lambda value we are using in our cost function
+def find_best_regression(matrix, results, max_cols, l):
+
+	# TODO: untested
+	# TODO: What do we want to print/ return about this regression
+
+	lowest_error = 9999999.9
+	for i in range(max_cols):
+		pass
+		# TODO: loop through all varients of this number of cols
+		# Do the regression, then calculate its error
+		# use the error, i (number of cols), and lamba to calculate cost
+		# if it is lower than what we currently have save the cost
+		# and the regression
+
+
+###########################################################
+
 # Do a regression using the given data
 # Matrix is the columns used to train (no leading ones needed)
 # Results is a vector of the actual values we are trying to predict
