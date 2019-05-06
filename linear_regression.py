@@ -76,10 +76,12 @@ def regression(matrix, results):
 
 	# TODO: untested
 
-	# TODO: Add a column of 1's to matrix
-	matrix_trans = matrix.transpose()
+	ones = numpy.matrix([matrix.size[0], 1])
+	ones.fill(1)
+	bais_matrix = numpy.c_[ones, matrix]
+	matrix_trans = bais_matrix.transpose()
 	try:
-		inverted = numpy.linalg.inv(matrix_trans * matrix)
+		inverted = numpy.linalg.inv(matrix_trans * bias_matrix)
 	except numpy.linalg.LinAlgError:
 		print "Matrix times transpose not invertable"
 	else:
@@ -197,10 +199,9 @@ def read_csv(filename):
 		data_matrix = numpy.matrix(data, dtype='f')
 		normalize_data(data_matrix)
 
-#TODO: How do we merge/ add columns to a matrix
+		train_data = numpy.c_[data_matrix[:,0:2], data_matrix[:,4:7]]
+		print train_data
 
-		#train_data = data_matrix[:,0:2].merge(data_matrix[:,4:] )
-		#print train_data
 
 
 ###########################################################
