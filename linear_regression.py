@@ -47,7 +47,7 @@ def get_cols_from_headers(row):
 ###########################################################
 
 # Find the lowest cost regression for this data
-# Matrix is all the possible columns to use to do this regression
+# Matrix is all the possible columns to use to do this regression (no leading ones)
 # Results is a vector of the results we are attempting to predict
 # Max_cols is the most columns we will try to find our best regression
 # l is the lambda value we are using in our cost function
@@ -56,32 +56,50 @@ def find_best_regression(matrix, results, max_cols, l):
 	# TODO: untested
 	# TODO: What do we want to print/ return about this regression
 
-	lowest_error = 9999999.9
+	lowest_cost = 9999999.9
+	best_weights
 	for i in range(max_cols):
-		pass
-		# TODO: loop through all varients of this number of cols
-		# Do the regression, then calculate its error
-		# use the error, i (number of cols), and lamba to calculate cost
-		# if it is lower than what we currently have save the cost
-		# and the regression
+		col_num_done = (i > matrix.size[1]) # Don't go if we have too few cols
+		col_list = range(i)
+		while(!col_num_done):
+			trimmed_matrix = numpy.matrix([matrix.size[0], 1])
+			for j in col_list:
+				trimmed_matrix = numpy.c_[trimmed_matrix, matrix[:, j]]
 
+			weights = regression(trimmed_matrix, results)
+			error = regression_error(trimmed_matrix, results, weights)
+			cost = (i * l) + error
+			if(cost < lowest_cost):
+				lowest_cost = cost
+				best_weights = weights
+
+			col_num_done = get_next_col_list(col_list, matrix.size[1])
+
+###########################################################
+
+# Get the next list of columns to look at for a regression
+# First is the current col list which gets updates it
+# Second is the number of columns we are looking through
+# Returns if we are done
+def get_next_col_list(col_list, max_cols):
+
+	# TODO: untested
+
+	
 
 ###########################################################
 
 # Do a regression using the given data
-# Matrix is the columns used to train (no leading ones needed)
+# Matrix is the columns used to train with leading column of ones
 # Results is a vector of the actual values we are trying to predict
 # Returns a vector of the weights used for this regression
 def regression(matrix, results):
 
 	# TODO: untested
 
-	ones = numpy.matrix([matrix.size[0], 1])
-	ones.fill(1)
-	bais_matrix = numpy.c_[ones, matrix]
-	matrix_trans = bais_matrix.transpose()
+	matrix_trans = matrix.transpose()
 	try:
-		inverted = numpy.linalg.inv(matrix_trans * bias_matrix)
+		inverted = numpy.linalg.inv(matrix_trans * matrix)
 	except numpy.linalg.LinAlgError:
 		print "Matrix times transpose not invertable"
 	else:
@@ -90,7 +108,7 @@ def regression(matrix, results):
 ###########################################################
 
 # Calculate the error for a regression
-# Matrix of data used in regression
+# Matrix of data used in regression with a leading 1 column
 # Vector of results from regression
 # Vector of calculated weights from regression
 # Returns the average error
@@ -108,15 +126,15 @@ def regression_error(matrix, results, weights):
 ###########################################################
 
 # Predict a value based off of a row of input data
-# Row of data to use
+# Row of data to use (includes leading 1)
 # Calculated regression weights
 # Value we predict
 def predict_value(input_data, weights):
 
 	#TODO: untested
-	output = weights[0, 0]
+	output = 0
 	for i in range(input_data.shape[1]):
-		output += input_data[0, i] * weights[0, i+1]
+		output += input_data[0, i] * weights[0, i]
 
 	return output
 
