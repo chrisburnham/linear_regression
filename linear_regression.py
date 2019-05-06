@@ -51,6 +51,9 @@ def get_cols_from_headers(row):
 # Results is a vector of the actual values we are trying to predict
 # Returns a vector of the weights used for this regression
 def regression(matrix, results):
+
+	# TODO: untested
+
 	# TODO: Add a column of 1's to matrix
 	matrix_trans = matrix.transpose()
 	try:
@@ -60,6 +63,38 @@ def regression(matrix, results):
 	else:
 		return (inverted * matrix_trans) * results
 
+###########################################################
+
+# Calculate the error for a regression
+# Matrix of data used in regression
+# Vector of results from regression
+# Vector of calculated weights from regression
+# Returns the average error
+def regression_error(matrix, results, weights):
+
+	# TODO: untested
+
+	error = 0.0
+	for i in range(matrix.shape[0]):
+		prediction = predict_value(matrix[i,:], weights)
+		diff = prediction - results[i]
+		error += diff ** 2
+
+
+###########################################################
+
+# Predict a value based off of a row of input data
+# Row of data to use
+# Calculated regression weights
+# Value we predict
+def predict_value(input_data, weights):
+
+	#TODO: untested
+	output = weights[0, 0]
+	for i in range(input_data.shape[1]):
+		output += input_data[0, i] * weights[0, i+1]
+
+	return output
 
 ###########################################################
 
