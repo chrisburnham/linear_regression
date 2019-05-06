@@ -2,6 +2,38 @@ import csv
 import argparse
 import random
 
+###########################################################
+
+# Cleans the data in our generated lists
+def clean_lists(train_list, tune_list, validate_list):
+	clean_data(train_list)
+	clean_data(tune_list)
+	clean_data(validate_list)
+
+###########################################################
+
+# Cleans the data to all be convertable to a float
+# Note this is likely only useful for kc_house_data.csv
+# Clean the data contained in the list
+def clean_data(data_list):
+	for row in data_list:
+		for item in row:
+			clean_item(item)
+
+
+###########################################################
+
+# Converts a string into something that can definitly be 
+# converted into a float
+def clean_item(item):
+	if(item.find('T') == 1):
+		split_list = item.split('T')
+		print float(split_list[0])
+		print float(split_list[1])
+
+
+###########################################################
+
 # Write a list of rows to a CSV
 def write_csv(filename, list):
 	with open(filename, 'wb') as csvfile:
@@ -86,6 +118,9 @@ def seperate_csv(filename, attempts):
 		seperate_csv(filename, attempts)
 		return
 
+	if(args.get("clean_data")):
+		clean_lists(train_list, tune_list, validate_list)
+
 	write_csv(args.get("training_data_file"), train_list)
 	write_csv(args.get("tuning_data_file"), tune_list)
 	write_csv(args.get("validation_data_file"), validate_list)
@@ -144,6 +179,10 @@ if __name__ == "__main__":
 											help="How times do we try to fulfil our tolerance before we give up",
 											type=int,
 											default=10)
+
+	parser.add_argument("--clean_data",
+											action="store_true",
+											help="Clean data so it can be interpreted as floats")
 
 	args = vars(parser.parse_args())
 
