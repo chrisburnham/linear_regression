@@ -44,6 +44,22 @@ def get_cols_from_headers(row):
 
 # Want some sort of validation function. Probably calculate error on a function
 
+###########################################################
+
+# Do a regression using the given data
+# Matrix is the columns used to train (no leading ones needed)
+# Results is a vector of the actual values we are trying to predict
+# Returns a vector of the weights used for this regression
+def regression(matrix, results):
+	# TODO: Add a column of 1's to matrix
+	matrix_trans = matrix.transpose()
+	try:
+		inverted = numpy.linalg.inv(matrix_trans * matrix)
+	except numpy.linalg.LinAlgError:
+		print "Matrix times transpose not invertable"
+	else:
+		return (inverted * matrix_trans) * results
+
 
 ###########################################################
 
@@ -122,14 +138,13 @@ def read_csv(filename):
 			first = False
 
 		data_matrix = numpy.matrix(data, dtype='f')
-
-		print data_matrix
 		normalize_data(data_matrix)
-		print data_matrix
 
-		#print data
-		#data = normalize_data(data)
-		#print data
+#TODO: How do we merge/ add columns to a matrix
+
+		#train_data = data_matrix[:,0:2].merge(data_matrix[:,4:] )
+		#print train_data
+
 
 ###########################################################
 
