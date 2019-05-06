@@ -16,21 +16,12 @@ def clean_lists(train_list, tune_list, validate_list):
 # Note this is likely only useful for kc_house_data.csv
 # Clean the data contained in the list
 def clean_data(data_list):
-	for row in data_list:
-		for item in row:
-			clean_item(item)
-
-
-###########################################################
-
-# Converts a string into something that can definitly be 
-# converted into a float
-def clean_item(item):
-	if(item.find('T') == 1):
-		split_list = item.split('T')
-		print float(split_list[0])
-		print float(split_list[1])
-
+	for i in range(len(data_list)):
+		for j in range(len(data_list[i])):
+			# Removing T and time from dates
+			if(data_list[i][j].count('T') == 1):
+				split_list = data_list[i][j].split('T')
+				data_list[i][j] = float(split_list[0])
 
 ###########################################################
 
@@ -119,6 +110,7 @@ def seperate_csv(filename, attempts):
 		return
 
 	if(args.get("clean_data")):
+		print "Cleaning data"
 		clean_lists(train_list, tune_list, validate_list)
 
 	write_csv(args.get("training_data_file"), train_list)
