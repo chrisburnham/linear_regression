@@ -1,6 +1,7 @@
 import csv
 import argparse
 import numpy
+import intertools
 
 # Pass in first row to return a list of the header
 # indexs that we care about. If cols is not set 
@@ -58,10 +59,9 @@ def find_best_regression(matrix, results, max_cols, l):
 
 	lowest_cost = 9999999.9
 	best_weights
-	for i in range(max_cols):
-		col_num_done = (i > matrix.size[1]) # Don't go if we have too few cols
-		col_list = range(i)
-		while(!col_num_done):
+	for i in range(min(max_cols, matrix.size[1])):
+		col_list = intertools.combinations(range(matrix.size[1]), i)
+		for col_list in col_combos:
 			trimmed_matrix = numpy.matrix([matrix.size[0], 1])
 			for j in col_list:
 				trimmed_matrix = numpy.c_[trimmed_matrix, matrix[:, j]]
@@ -69,23 +69,23 @@ def find_best_regression(matrix, results, max_cols, l):
 			weights = regression(trimmed_matrix, results)
 			error = regression_error(trimmed_matrix, results, weights)
 			cost = (i * l) + error
+
+			print "Regression:"
+			print col_list
+			print trimmed_matrix
+			print weights
+			print error
+			print cost
+			print "\n"
+
 			if(cost < lowest_cost):
+				print "lower cost"
 				lowest_cost = cost
 				best_weights = weights
 
-			col_num_done = get_next_col_list(col_list, matrix.size[1])
+  print "\nBest Weights:"
+	print best_weights
 
-###########################################################
-
-# Get the next list of columns to look at for a regression
-# First is the current col list which gets updates it
-# Second is the number of columns we are looking through
-# Returns if we are done
-def get_next_col_list(col_list, max_cols):
-
-	# TODO: untested
-
-	
 
 ###########################################################
 
