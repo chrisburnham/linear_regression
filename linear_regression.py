@@ -127,9 +127,6 @@ def find_best_regression(matrix, results, max_cols, l):
 # Results is a vector of the actual values we are trying to predict
 # Returns a vector of the weights used for this regression
 def regression(matrix, results):
-
-	# TODO: untested
-
 	matrix_trans = matrix.transpose()
 
 	try:
