@@ -1,7 +1,7 @@
 import csv
 import argparse
 import numpy
-import intertools
+import itertools
 
 # Pass in first row to return a list of the header
 # indexs that we care about. If cols is not set 
@@ -57,34 +57,67 @@ def find_best_regression(matrix, results, max_cols, l):
 	# TODO: untested
 	# TODO: What do we want to print/ return about this regression
 
+	debug = True
+
+	if(debug):
+		print matrix
+		print results
+
 	lowest_cost = 9999999.9
-	best_weights
-	for i in range(min(max_cols, matrix.size[1])):
-		col_list = intertools.combinations(range(matrix.size[1]), i)
+	best_weights = list()
+	best_cols = list()
+	for i in range(min(max_cols, matrix.shape[1])):
+		col_combos = itertools.combinations(range(matrix.shape[1]), i+1)
 		for col_list in col_combos:
-			trimmed_matrix = numpy.matrix([matrix.size[0], 1])
+
+			if(debug):
+				print "\nRegression:"
+				print "Cols:"
+				print col_list
+
+			trimmed_matrix = numpy.zeros(shape=(matrix.shape[0], 1))
+			trimmed_matrix.fill(1)
 			for j in col_list:
 				trimmed_matrix = numpy.c_[trimmed_matrix, matrix[:, j]]
 
+			if(debug):
+				print "Input data:"
+				print trimmed_matrix
+
 			weights = regression(trimmed_matrix, results)
+
+			if(weights == None):
+				print "bad regression"
+				break;
+
+			if(debug):
+				print "Output weights:"
+				print weights
+
 			error = regression_error(trimmed_matrix, results, weights)
+
+			if(debug):
+				print "Error:"
+				print error
+
+
 			cost = (i * l) + error
 
-			print "Regression:"
-			print col_list
-			print trimmed_matrix
-			print weights
-			print error
-			print cost
-			print "\n"
+			if(debug):
+				print "Cost:"
+				print cost
+				print "\n"
 
 			if(cost < lowest_cost):
 				print "lower cost"
 				lowest_cost = cost
 				best_weights = weights
+				best_cols = col_list
 
-  print "\nBest Weights:"
+	print "\nBest Weights:"
 	print best_weights
+	print "on cols"
+	print best_cols
 
 
 ###########################################################
@@ -98,10 +131,12 @@ def regression(matrix, results):
 	# TODO: untested
 
 	matrix_trans = matrix.transpose()
+
 	try:
 		inverted = numpy.linalg.inv(matrix_trans * matrix)
 	except numpy.linalg.LinAlgError:
 		print "Matrix times transpose not invertable"
+		print matrix_trans * matrix
 	else:
 		return (inverted * matrix_trans) * results
 
@@ -111,7 +146,7 @@ def regression(matrix, results):
 # Matrix of data used in regression with a leading 1 column
 # Vector of results from regression
 # Vector of calculated weights from regression
-# Returns the average error
+# Returns the error
 def regression_error(matrix, results, weights):
 
 	# TODO: untested
@@ -122,19 +157,22 @@ def regression_error(matrix, results, weights):
 		diff = prediction - results[i]
 		error += diff ** 2
 
+	return error
+
 
 ###########################################################
 
 # Predict a value based off of a row of input data
 # Row of data to use (includes leading 1)
-# Calculated regression weights
+# Calculated regression weights (column)
 # Value we predict
 def predict_value(input_data, weights):
 
 	#TODO: untested
 	output = 0
+
 	for i in range(input_data.shape[1]):
-		output += input_data[0, i] * weights[0, i]
+		output += input_data[0, i] * weights[i, 0]
 
 	return output
 
@@ -217,8 +255,11 @@ def read_csv(filename):
 		data_matrix = numpy.matrix(data, dtype='f')
 		normalize_data(data_matrix)
 
-		train_data = numpy.c_[data_matrix[:,0:2], data_matrix[:,4:7]]
-		print train_data
+		#print data_matrix
+		train_data = numpy.c_[data_matrix[:,0:2], data_matrix[:,3:]]
+		#print train_data
+
+		find_best_regression(train_data, data_matrix[:,2], 4, 0.01)
 
 
 
