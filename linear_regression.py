@@ -84,8 +84,11 @@ def find_best_regression(matrix, results, max_cols, l):
 
 			if(debug):
 				print "Error:"
+				print col_list
+				print trimmed_matrix
+				print results
+				print weights
 				print error
-
 
 			cost = (i * l) + error
 
@@ -106,6 +109,8 @@ def find_best_regression(matrix, results, max_cols, l):
 	print best_weights
 	print "on cols"
 	print best_cols
+	print "cost"
+	print lowest_cost
 
 	return best_cols, best_weights
 
@@ -234,12 +239,21 @@ def run_regression():
 	data_matrix, result_matrix = read_csv(args.get("data_file"))
 
 	best_cols, best_weights = find_best_regression(data_matrix, 
-																				 result_matrix, 
-																				 args.get("max_columns"), 
-																				 args.get("lambda"))			
+																				 				 result_matrix, 
+																				 				 args.get("max_columns"), 
+																				 				 args.get("lambda"))			
 
-	print best_cols
-	print best_weights																					 						 
+	verify_matrix, verify_results = read_csv(args.get("validation_file"))
+
+	check_matrix = numpy.zeros(shape=(verify_matrix.shape[0], 1))
+	check_matrix.fill(1)
+	for col in best_cols:
+		check_matrix = numpy.c_[check_matrix, verify_matrix[:, col]]
+
+	error = regression_error(check_matrix, verify_results, best_weights)
+	print "\nError:"
+	print error			
+														 						 
 
 ###########################################################
 
