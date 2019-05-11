@@ -5,24 +5,31 @@ import itertools
 
 # Pass in first row to return a list of the header
 # indexs that we care about. If cols is not set 
-# return all of them
+# return all of them in a tuple with the index
+# of the column containing the results
 def get_cols_from_headers(row):
 	cols = list()
+	result_col = -1
 	arg_cols = args.get("cols")
+	results_name = args.get("results")
 
-	if((type(arg_cols) != type(list())) or (len(arg_cols) == 0)):
-		cols = range(len(row))
-	else:
-		for i in range(len(row)):
-			not_found = True
+	for i in range(len(row)):
+		if(results_name == row[i]):
+			result_col = i
+			continue
+
+
+		not_found = True
+		if(type(arg_cols) == type(list())):
 			for name in arg_cols:
 				if(name == row[i]):
 					not_found = False
 					break
-			if(not_found):
-				cols.append(i)
 
-	return cols
+		if(not_found):
+			cols.append(i)
+
+	return cols, result_col
 
 ###########################################################
 
@@ -100,7 +107,7 @@ def find_best_regression(matrix, results, max_cols, l):
 	print "on cols"
 	print best_cols
 
-	return (best_cols, best_weights)
+	return best_cols, best_weights
 
 
 ###########################################################
@@ -171,7 +178,7 @@ def normalize_data(matrix):
 ###########################################################
 
 # Takes in the filename of a CSV and returns its filtered
-# normilized data
+# normilized data, as well as the results column matrix
 def read_csv(filename):
 	with open(filename, 'rb') as csvfile:
 		csv_reader = csv.reader(csvfile)
@@ -180,45 +187,59 @@ def read_csv(filename):
 
 		cols = list()
 		data = list()
+		result_col = -1
+		results = list()
 		for row in csv_reader:
 			if(first):
 				if(args.get("print_headers")):
 					print row
-					return
+					exit()
 
-				# TODO: Get results column number
-				cols = get_cols_from_headers(row)
+				cols, result_col = get_cols_from_headers(row)
+
+				if(result_col == -1):
+					print "Invalid Result Column"
+					exit()
 
 			data_row = list()
+			result_row = list()
+
 			for i in range(len(row)):
-				if(cols.count(i) != 0):
+
+				if(result_col == i):
+					result_row.append(row[i])
+				elif(cols.count(i) != 0):
 					data_row.append(row[i])
 
 			if(args.get("print_data")):
-				print data_row
+				print data_row + result_row
 
 			if(not first):
 				data.append(data_row)
+				results.append(result_row)
 
 			first = False
 
 		data_matrix = numpy.matrix(data, dtype='f')
 		normalize_data(data_matrix)
-		return data_matrix
+
+		result_matrix = numpy.matrix(results, dtype='f')
+		normalize_data(result_matrix)
+
+		return data_matrix, result_matrix
 
 ###########################################################
 
 def run_regression():
-	data_matrix = read_csv(args.get("data_file"))
+	data_matrix, result_matrix = read_csv(args.get("data_file"))
 
-	train_data = numpy.c_[data_matrix[:,0:2], data_matrix[:,3:]]
-
-	best_regression = find_best_regression(train_data, 
-																				 data_matrix[:,2], 
+	best_cols, best_weights = find_best_regression(data_matrix, 
+																				 result_matrix, 
 																				 args.get("max_columns"), 
 																				 args.get("lambda"))			
 
-	print best_regression																					 						 
+	print best_cols
+	print best_weights																					 						 
 
 ###########################################################
 
