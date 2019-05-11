@@ -24,30 +24,6 @@ def get_cols_from_headers(row):
 
 	return cols
 
-
-# Calculating a regression
-# A = matrix of the values (with a leading column of 1's)
-# w = vector of the weights for the regression
-# y = matrix of the results (maybe a vector actually?)
-# using A' to mean A transpose
-# using A^-1 to mean A inverse
-# w = (A'A)^-1A'y
-# A transpose times A inverted. Times A transpose, with the inputs as its input
-
-
-# Calculate error
-# Sum of the squares of the errors (probably just sum the elements individually)
-
-# Want to calc error for all possible varients of a given number of cols
-# and pick the smallest error. Then if doing a range of number of colums
-# we want to use a lambda to pick one (lowest cost). 
-# cost = error + lambda * num_cols
-# lambda and max cols (mabe min too) should be args
-
-# lambda decided based off of tuning
-
-# Want some sort of validation function. Probably calculate error on a function
-
 ###########################################################
 
 # Find the lowest cost regression for this data
@@ -59,7 +35,6 @@ def get_cols_from_headers(row):
 def find_best_regression(matrix, results, max_cols, l):
 
 	# TODO: untested
-	# TODO: What do we want to print/ return about this regression
 
 	debug = args.get("print_data")
 
