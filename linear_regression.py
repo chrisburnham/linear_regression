@@ -14,10 +14,13 @@ def get_cols_from_headers(row):
 		cols = range(len(row))
 	else:
 		for i in range(len(row)):
+			not_found = True
 			for name in arg_cols:
 				if(name == row[i]):
-					cols.append(i)
+					not_found = False
 					break
+			if(not_found):
+				cols.append(i)
 
 	return cols
 
@@ -52,12 +55,13 @@ def get_cols_from_headers(row):
 # Results is a vector of the results we are attempting to predict
 # Max_cols is the most columns we will try to find our best regression
 # l is the lambda value we are using in our cost function
+# returns a tuple of the best column indexes and there corresponing weights
 def find_best_regression(matrix, results, max_cols, l):
 
 	# TODO: untested
 	# TODO: What do we want to print/ return about this regression
 
-	debug = True
+	debug = args.get("print_data")
 
 	if(debug):
 		print matrix
@@ -109,7 +113,9 @@ def find_best_regression(matrix, results, max_cols, l):
 				print "\n"
 
 			if(cost < lowest_cost):
-				print "lower cost"
+				if(debug):
+					print "lower cost"
+
 				lowest_cost = cost
 				best_weights = weights
 				best_cols = col_list
@@ -118,6 +124,8 @@ def find_best_regression(matrix, results, max_cols, l):
 	print best_weights
 	print "on cols"
 	print best_cols
+
+	return (best_cols, best_weights)
 
 
 ###########################################################
@@ -187,6 +195,8 @@ def normalize_data(matrix):
 
 ###########################################################
 
+# Takes in the filename of a CSV and returns its filtered
+# normilized data
 def read_csv(filename):
 	with open(filename, 'rb') as csvfile:
 		csv_reader = csv.reader(csvfile)
@@ -218,12 +228,21 @@ def read_csv(filename):
 
 		data_matrix = numpy.matrix(data, dtype='f')
 		normalize_data(data_matrix)
+		return data_matrix
 
-		train_data = numpy.c_[data_matrix[:,0:2], data_matrix[:,3:]]
+###########################################################
 
-		find_best_regression(train_data, data_matrix[:,2], 4, 0.01)
+def run_regression():
+	data_matrix = read_csv(args.get("data_file"))
 
+	train_data = numpy.c_[data_matrix[:,0:2], data_matrix[:,3:]]
 
+	best_regression = find_best_regression(train_data, 
+																				 data_matrix[:,2], 
+																				 args.get("max_columns"), 
+																				 args.get("lambda"))			
+
+	print best_regression																					 						 
 
 ###########################################################
 
@@ -271,5 +290,4 @@ if __name__ == "__main__":
 
 	args = vars(parser.parse_args())
 
-
-	read_csv(args.get("data_file"))
+	run_regression()
