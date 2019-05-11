@@ -2,6 +2,7 @@ import csv
 import argparse
 import numpy
 import itertools
+import math
 
 # Pass in first row to return a list of the header
 # indexs that we care about. If cols is not set 
@@ -53,8 +54,18 @@ def find_best_regression(matrix, results, max_cols, l):
 	best_weights = list()
 	best_cols = list()
 	for i in range(min(max_cols, matrix.shape[1])):
-		col_combos = itertools.combinations(range(matrix.shape[1]), i+1)
+		print "Calc Combos"
+		combo_sz = i + 1
+		pick_pool = range(matrix.shape[1])
+		num_combos = math.factorial(len(pick_pool)) / math.factorial(combo_sz) / math.factorial(len(pick_pool) - combo_sz)
+		col_combos = itertools.combinations(pick_pool, combo_sz)
+		combos_considered = 0
+		print "Checking for " + str(combo_sz) + " combinations: " + str(num_combos)
 		for col_list in col_combos:
+			combos_considered += 1
+			if((combos_considered % 10) == 9):
+				print str(100.0 * (float(combos_considered) / num_combos)) + "%% done"
+
 
 			if(debug):
 				print "\nRegression:"
