@@ -229,16 +229,21 @@ def read_csv(filename):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Run Linear Regression")
+
 	parser.add_argument("--data_file",
 											metavar="data_file.csv",
 											help="Path to data file to read",
 											required=True)
-	
+
 	parser.add_argument("-c",
 											"--cols",
 											action="append",
 											metavar="Column_name",
-											help="Columns to look at. Specify multiple times")
+											help="Columns to skip. Specify multiple times")
+
+	parser.add_argument("--results",
+											metavar="Column_name",
+											help="Column with the the results")
 
 	parser.add_argument("--print_headers",
 											action="store_true",
@@ -246,7 +251,28 @@ if __name__ == "__main__":
 
 	parser.add_argument("--print_data",
 											action="store_true",
-											help="Print data specified")
+											help="Print data as we go")
+
+
+	subparsers = parser.add_subparsers(help="Training or Validation")
+	train_parser = subparsers.add_parser("train", help="Training arguments")
+	train_parser.add_argument("--max_columns",
+													  type=int,
+													  metavar="num",
+													  help="Max number of columns to look at")
+
+	train_parser.add_argument("-l",
+													  "--lambda",
+													  type=float,
+													  metavar="num",
+													  help="Lambda value to choose the best regression")
+
+
+	validate_parser = subparsers.add_parser("validate", help="Validation arguments")
+	validate_parser.add_argument("--model_file",
+														   metavar="file",
+														   help="File that contains the model to validate")
+
 
 	args = vars(parser.parse_args())
 
