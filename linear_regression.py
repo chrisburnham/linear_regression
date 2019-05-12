@@ -41,9 +41,6 @@ def get_cols_from_headers(row):
 # l is the lambda value we are using in our cost function
 # returns a tuple of the best column indexes and there corresponing weights
 def find_best_regression(matrix, results, max_cols, l):
-
-	# TODO: untested
-
 	debug = args.get("print_data")
 
 	if(debug):
@@ -65,7 +62,6 @@ def find_best_regression(matrix, results, max_cols, l):
 			combos_considered += 1
 			if((combos_considered % 10) == 9):
 				print str(100.0 * (float(combos_considered) / num_combos)) + "%% done"
-
 
 			if(debug):
 				print "\nRegression:"
@@ -118,10 +114,10 @@ def find_best_regression(matrix, results, max_cols, l):
 
 	print "\nBest Weights:"
 	print best_weights
-	print "on cols"
-	print best_cols
 	print "cost"
 	print lowest_cost
+	print "on cols"
+	print best_cols
 
 	return best_cols, best_weights
 
@@ -151,16 +147,14 @@ def regression(matrix, results):
 # Vector of calculated weights from regression
 # Returns the error
 def regression_error(matrix, results, weights):
-
-	# TODO: untested
-
 	error = 0.0
-	for i in range(matrix.shape[0]):
+	num_elements = matrix.shape[0]
+	for i in range(num_elements):
 		prediction = predict_value(matrix[i,:], weights)
 		diff = prediction - results[i]
 		error += diff ** 2
 
-	return error
+	return error / num_elements
 
 
 ###########################################################
@@ -170,8 +164,6 @@ def regression_error(matrix, results, weights):
 # Calculated regression weights (column)
 # Value we predict
 def predict_value(input_data, weights):
-
-	#TODO: untested
 	output = 0
 
 	for i in range(input_data.shape[1]):
@@ -205,6 +197,7 @@ def read_csv(filename):
 		data = list()
 		result_col = -1
 		results = list()
+		headers = list()
 		for row in csv_reader:
 			if(first):
 				if(args.get("print_headers")):
@@ -233,6 +226,8 @@ def read_csv(filename):
 			if(not first):
 				data.append(data_row)
 				results.append(result_row)
+			else:
+				headers = data_row
 
 			first = False
 
@@ -242,24 +237,28 @@ def read_csv(filename):
 		result_matrix = numpy.matrix(results, dtype='f')
 		normalize_data(result_matrix)
 
-		return data_matrix, result_matrix
+		return data_matrix, result_matrix, headers
 
 ###########################################################
 
 def run_regression():
-	data_matrix, result_matrix = read_csv(args.get("data_file"))
+	data_matrix, result_matrix, headers = read_csv(args.get("data_file"))
 
 	best_cols, best_weights = find_best_regression(data_matrix, 
 																				 				 result_matrix, 
 																				 				 args.get("max_columns"), 
 																				 				 args.get("lambda"))			
 
-	verify_matrix, verify_results = read_csv(args.get("validation_file"))
+	verify_matrix, verify_results, headers = read_csv(args.get("validation_file"))
 
 	check_matrix = numpy.zeros(shape=(verify_matrix.shape[0], 1))
 	check_matrix.fill(1)
+	
+	print "Column Names:"
+
 	for col in best_cols:
 		check_matrix = numpy.c_[check_matrix, verify_matrix[:, col]]
+		print headers[col]
 
 	error = regression_error(check_matrix, verify_results, best_weights)
 	print "\nError:"
