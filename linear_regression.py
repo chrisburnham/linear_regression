@@ -51,7 +51,6 @@ def find_best_regression(matrix, results, max_cols, l):
 	best_weights = list()
 	best_cols = list()
 	for i in range(min(max_cols, matrix.shape[1])):
-		print "Calc Combos"
 		combo_sz = i + 1
 		pick_pool = range(matrix.shape[1])
 		num_combos = math.factorial(len(pick_pool)) / math.factorial(combo_sz) / math.factorial(len(pick_pool) - combo_sz)
