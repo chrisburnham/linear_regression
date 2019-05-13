@@ -1,3 +1,7 @@
+# Chris Burnham
+# VTC Machine Learning 2019
+
+
 import csv
 import argparse
 import random
